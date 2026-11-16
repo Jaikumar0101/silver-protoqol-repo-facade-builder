@@ -5,6 +5,7 @@ namespace SilverProtoQoL\RepoFacadeBuilder\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use SilverProtoQoL\RepoFacadeBuilder\Commands\Concerns\ReadsStringInput;
 use SilverProtoQoL\RepoFacadeBuilder\Support\ModuleResolver;
 use SilverProtoQoL\RepoFacadeBuilder\Support\StubRenderer;
 
@@ -14,6 +15,8 @@ use SilverProtoQoL\RepoFacadeBuilder\Support\StubRenderer;
  */
 abstract class GeneratorCommand extends Command
 {
+    use ReadsStringInput;
+
     /**
      * Options appended to every generator signature.
      */
@@ -42,9 +45,9 @@ abstract class GeneratorCommand extends Command
      */
     protected function resolveContext(): bool
     {
-        $module = $this->option('module');
+        $module = $this->stringOption('module');
 
-        if ($module === null || $module === '') {
+        if ($module === null) {
             $this->module = null;
 
             return true;

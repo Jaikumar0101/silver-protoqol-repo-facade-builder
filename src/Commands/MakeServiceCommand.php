@@ -16,7 +16,7 @@ class MakeServiceCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $name] = $this->parseName($this->argument('name'), 'Service');
+        [$segments, $name] = $this->parseName($this->stringArgument('name'), 'Service');
         [$directory, $namespace] = $this->location('service', $segments);
 
         $class = "{$name}Service";
@@ -38,7 +38,7 @@ class MakeServiceCommand extends GeneratorCommand
 
     protected function resolveRepository(): ?string
     {
-        $repository = $this->option('repository');
+        $repository = $this->stringOption('repository');
 
         if (! $repository) {
             return null;

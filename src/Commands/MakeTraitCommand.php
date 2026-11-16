@@ -15,7 +15,7 @@ class MakeTraitCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $class] = $this->parseName($this->argument('name'));
+        [$segments, $class] = $this->parseName($this->stringArgument('name'));
         [$directory, $namespace] = $this->location('trait', $segments);
 
         $this->writeStub("{$directory}/{$class}.php", 'trait', [

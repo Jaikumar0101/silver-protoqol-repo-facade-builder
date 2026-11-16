@@ -15,7 +15,7 @@ class MakeInterfaceCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $name] = $this->parseName($this->argument('name'), 'Interface');
+        [$segments, $name] = $this->parseName($this->stringArgument('name'), 'Interface');
         [$directory, $namespace] = $this->location('interface', $segments);
 
         $this->writeStub("{$directory}/{$name}Interface.php", 'interface', [

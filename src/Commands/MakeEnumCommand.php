@@ -16,7 +16,8 @@ class MakeEnumCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        $type = $this->option('type') ? strtolower((string) $this->option('type')) : null;
+        $type = $this->stringOption('type');
+        $type = $type !== null ? strtolower($type) : null;
 
         if ($type !== null && ! in_array($type, ['string', 'int'], true)) {
             $this->components->error('The --type option must be "string" or "int".');
@@ -24,7 +25,7 @@ class MakeEnumCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $class] = $this->parseName($this->argument('name'));
+        [$segments, $class] = $this->parseName($this->stringArgument('name'));
         [$directory, $namespace] = $this->location('enum', $segments);
 
         $this->writeStub("{$directory}/{$class}.php", $type ? "enum.{$type}" : 'enum', [

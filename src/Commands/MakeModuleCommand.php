@@ -7,12 +7,15 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Nwidart\Modules\LaravelModulesServiceProvider;
+use SilverProtoQoL\RepoFacadeBuilder\Commands\Concerns\ReadsStringInput;
 use SilverProtoQoL\RepoFacadeBuilder\Support\BindingRegistrar;
 use SilverProtoQoL\RepoFacadeBuilder\Support\ModuleResolver;
 use SilverProtoQoL\RepoFacadeBuilder\Support\StubRenderer;
 
 class MakeModuleCommand extends Command
 {
+    use ReadsStringInput;
+
     protected $signature = 'make:module
         {name : Module name (e.g. Blog)}
         {--a|autoload : Add the modules PSR-4 mapping to composer.json if it is missing}
@@ -30,7 +33,7 @@ class MakeModuleCommand extends Command
 
     public function handle(): int
     {
-        $module = Str::studly(trim($this->argument('name'), '/\\ '));
+        $module = Str::studly(trim($this->stringArgument('name'), '/\\ '));
 
         if ($module === '' || ! preg_match('/^[A-Z][A-Za-z0-9]*$/', $module)) {
             $this->components->error('Module name must be a single StudlyCase word (e.g. Blog).');

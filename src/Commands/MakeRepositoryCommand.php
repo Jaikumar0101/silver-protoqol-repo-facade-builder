@@ -35,7 +35,7 @@ class MakeRepositoryCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $name] = $this->parseName($this->argument('name'), 'Repository');
+        [$segments, $name] = $this->parseName($this->stringArgument('name'), 'Repository');
 
         [$directory, $namespace] = $this->location('repository', $segments);
         [$interfaceDirectory, $interfaceNamespace] = $this->location(
@@ -95,7 +95,7 @@ class MakeRepositoryCommand extends GeneratorCommand
 
         if ($this->option('service')) {
             $this->call('make:service', [
-                'name' => $this->argument('name'),
+                'name' => $this->stringArgument('name'),
                 '--repository' => $interfaceFqcn,
                 ...$this->forwardedOptions(),
             ]);
@@ -106,7 +106,7 @@ class MakeRepositoryCommand extends GeneratorCommand
 
     protected function resolveModel(): ?string
     {
-        $model = $this->option('model');
+        $model = $this->stringOption('model');
 
         if (! $model) {
             return null;

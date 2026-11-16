@@ -19,7 +19,7 @@ class MakeFacadeCommand extends GeneratorCommand
             return self::FAILURE;
         }
 
-        [$segments, $class] = $this->parseName($this->argument('name'), 'Facade');
+        [$segments, $class] = $this->parseName($this->stringArgument('name'), 'Facade');
         [$directory, $namespace] = $this->location('facade', $segments);
 
         $service = null;
@@ -35,8 +35,10 @@ class MakeFacadeCommand extends GeneratorCommand
             ]);
         }
 
+        $customAccessor = $this->stringOption('accessor');
+
         $accessor = match (true) {
-            (bool) $this->option('accessor') => var_export((string) $this->option('accessor'), true),
+            $customAccessor !== null => var_export($customAccessor, true),
             $service !== null => '\\'.$service.'::class',
             default => var_export(Str::snake($class), true),
         };
@@ -49,7 +51,7 @@ class MakeFacadeCommand extends GeneratorCommand
             'imports' => $this->imports($namespace, ['Illuminate\Support\Facades\Facade']),
         ]);
 
-        if (! $service && ! $this->option('accessor')) {
+        if (! $service && $customAccessor === null) {
             $this->components->bulletList([
                 'Bind the accessor in a service provider:',
                 "\$this->app->singleton('".Str::snake($class)."', fn () => new YourService());",
