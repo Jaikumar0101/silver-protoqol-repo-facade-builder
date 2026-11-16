@@ -1,0 +1,23 @@
+<?php
+
+namespace {{ namespace }};
+{{ imports }}
+interface {{ class }}
+{
+    /**
+     * @return Collection<int, {{ model }}>
+     */
+    public function all(array $columns = ['*']): Collection;
+
+    public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator;
+
+    public function find(int|string $id, array $columns = ['*']): ?{{ model }};
+
+    public function findOrFail(int|string $id, array $columns = ['*']): {{ model }};
+
+    public function create(array $attributes): {{ model }};
+
+    public function update(int|string $id, array $attributes): {{ model }};
+
+    public function delete(int|string $id): bool;
+}

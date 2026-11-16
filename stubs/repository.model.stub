@@ -1,0 +1,49 @@
+<?php
+
+namespace {{ namespace }};
+{{ imports }}
+class {{ class }} implements {{ interface }}
+{
+    public function __construct(
+        protected {{ model }} $model,
+    ) {
+    }
+
+    public function all(array $columns = ['*']): Collection
+    {
+        return $this->model->newQuery()->get($columns);
+    }
+
+    public function paginate(int $perPage = 15, array $columns = ['*']): LengthAwarePaginator
+    {
+        return $this->model->newQuery()->paginate($perPage, $columns);
+    }
+
+    public function find(int|string $id, array $columns = ['*']): ?{{ model }}
+    {
+        return $this->model->newQuery()->find($id, $columns);
+    }
+
+    public function findOrFail(int|string $id, array $columns = ['*']): {{ model }}
+    {
+        return $this->model->newQuery()->findOrFail($id, $columns);
+    }
+
+    public function create(array $attributes): {{ model }}
+    {
+        return $this->model->newQuery()->create($attributes);
+    }
+
+    public function update(int|string $id, array $attributes): {{ model }}
+    {
+        $record = $this->findOrFail($id);
+        $record->update($attributes);
+
+        return $record;
+    }
+
+    public function delete(int|string $id): bool
+    {
+        return (bool) $this->findOrFail($id)->delete();
+    }
+}

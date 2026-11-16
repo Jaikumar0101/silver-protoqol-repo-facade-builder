@@ -1,0 +1,20 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\ServiceProvider;
+
+class {{ class }} extends ServiceProvider
+{
+    /**
+     * Repository bindings (interface => implementation).
+     *
+     * Laravel registers every entry automatically. New entries are added
+     * above the marker by `php artisan make:repository --bind`.
+     *
+     * @var array<class-string, class-string>
+     */
+    public $bindings = [
+        {{ marker }}
+    ];
+}

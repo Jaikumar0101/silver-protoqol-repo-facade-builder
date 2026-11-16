@@ -1,0 +1,17 @@
+<?php
+
+namespace {{ namespace }};
+{{ imports }}
+/**
+ * {{ class }} facade.{{ see }}
+ */
+class {{ class }} extends Facade
+{
+    /**
+     * Get the registered name of the component.
+     */
+    protected static function getFacadeAccessor(): string
+    {
+        return {{ accessor }};
+    }
+}

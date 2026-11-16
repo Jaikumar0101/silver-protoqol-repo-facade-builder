@@ -1,0 +1,11 @@
+<?php
+
+namespace {{ namespace }};
+{{ imports }}
+class {{ class }}
+{
+    public function __construct()
+    {
+        //
+    }
+}

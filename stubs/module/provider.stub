@@ -1,0 +1,38 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
+
+class {{ module }}ServiceProvider extends ServiceProvider
+{
+    /**
+     * Absolute path to the module root.
+     */
+    protected function modulePath(string $path = ''): string
+    {
+        return {{ moduleRoot }}.($path !== '' ? '/'.ltrim($path, '/') : '');
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom($this->modulePath('config/config.php'), '{{ moduleSnake }}');
+
+        $this->app->register({{ repositoryProvider }}::class);
+    }
+
+    public function boot(): void
+    {
+        $this->loadMigrationsFrom($this->modulePath('database/migrations'));
+        $this->loadViewsFrom($this->modulePath('resources/views'), '{{ moduleKebab }}');
+
+        if (! $this->app->routesAreCached()) {
+            Route::middleware('web')->group($this->modulePath('routes/web.php'));
+
+            Route::middleware('api')
+                ->prefix('api/{{ moduleKebab }}')
+                ->group($this->modulePath('routes/api.php'));
+        }
+    }
+}

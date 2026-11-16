@@ -1,0 +1,11 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| {{ module }} API routes (prefixed with /api/{{ moduleKebab }})
+|--------------------------------------------------------------------------
+*/
+
+// Route::get('/', fn () => ['module' => '{{ module }}']);

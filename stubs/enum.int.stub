@@ -1,0 +1,9 @@
+<?php
+
+namespace {{ namespace }};
+
+enum {{ class }}: int
+{
+    // case Pending = 1;
+    // case Approved = 2;
+}
