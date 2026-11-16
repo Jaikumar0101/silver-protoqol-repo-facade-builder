@@ -74,7 +74,7 @@ abstract class GeneratorCommand extends Command
      */
     protected function parseName(string $input, string $suffix = ''): array
     {
-        $input = str_replace('\\', '/', trim($input, " /\\"));
+        $input = str_replace('\\', '/', trim($input, ' /\\'));
 
         $parts = array_values(array_map(
             fn (string $part) => Str::studly($part),

@@ -2,6 +2,7 @@
 
 namespace SilverProtoQoL\RepoFacadeBuilder\Support;
 
+use Illuminate\Contracts\Config\Repository as Config;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
@@ -17,8 +18,8 @@ class ModuleResolver
     public function __construct(
         protected Application $app,
         protected Filesystem $files,
-    ) {
-    }
+        protected Config $config,
+    ) {}
 
     public function rootPath(): string
     {
@@ -111,7 +112,7 @@ class ModuleResolver
 
     protected function config(string $key, mixed $default = null): mixed
     {
-        return $this->app['config']->get("repo-facade-builder.modules.{$key}", $default);
+        return $this->config->get("repo-facade-builder.modules.{$key}", $default);
     }
 
     protected function isAbsolute(string $path): bool

@@ -2,6 +2,11 @@
 
 namespace SilverProtoQoL\RepoFacadeBuilder\Tests\Feature;
 
+use Illuminate\Support\Facades\Artisan;
+use Modules\Inventory\Providers\InventoryServiceProvider;
+use Modules\Inventory\Repositories\StockRepository;
+use Modules\Inventory\Repositories\StockRepositoryInterface;
+use Modules\Inventory\Services\StockService;
 use PHPUnit\Framework\Attributes\Test;
 use SilverProtoQoL\RepoFacadeBuilder\Tests\TestCase;
 
@@ -149,15 +154,15 @@ class ModuleCommandsTest extends TestCase
             }
         });
 
-        $this->app->register(\Modules\Inventory\Providers\InventoryServiceProvider::class);
+        $this->app->register(InventoryServiceProvider::class);
 
         $this->assertInstanceOf(
-            \Modules\Inventory\Repositories\StockRepository::class,
-            $this->app->make(\Modules\Inventory\Repositories\StockRepositoryInterface::class)
+            StockRepository::class,
+            $this->app->make(StockRepositoryInterface::class)
         );
         $this->assertInstanceOf(
-            \Modules\Inventory\Services\StockService::class,
-            $this->app->make(\Modules\Inventory\Services\StockService::class)
+            StockService::class,
+            $this->app->make(StockService::class)
         );
         $this->assertSame('Inventory', config('inventory.name'));
     }
@@ -165,7 +170,7 @@ class ModuleCommandsTest extends TestCase
     #[Test]
     public function package_commands_take_precedence_over_framework_generators(): void
     {
-        $commands = \Illuminate\Support\Facades\Artisan::all();
+        $commands = Artisan::all();
 
         foreach (['make:enum', 'make:interface', 'make:trait'] as $name) {
             $this->assertStringStartsWith('SilverProtoQoL\\RepoFacadeBuilder\\', get_class($commands[$name]));

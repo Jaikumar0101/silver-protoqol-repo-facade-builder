@@ -10,8 +10,7 @@ class StubRenderer
     public function __construct(
         protected Filesystem $files,
         protected Config $config,
-    ) {
-    }
+    ) {}
 
     /**
      * Resolve a stub, preferring a published (customised) copy.

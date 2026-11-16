@@ -65,7 +65,7 @@ class GeneratorCommandsTest extends TestCase
         $this->artisan('make:enum', ['name' => 'Orders/OrderStatus', '--type' => 'string'])->assertSuccessful();
         $this->artisan('make:enum', ['name' => 'Priority', '--type' => 'int'])->assertSuccessful();
 
-        $this->assertFileContains(app_path('Enums/Status.php'), 'enum Status' . PHP_EOL);
+        $this->assertFileContains(app_path('Enums/Status.php'), 'enum Status'.PHP_EOL);
         $this->assertFileContains(app_path('Enums/Orders/OrderStatus.php'),
             'namespace App\Enums\Orders;', 'enum OrderStatus: string');
         $this->assertFileContains(app_path('Enums/Priority.php'), 'enum Priority: int');

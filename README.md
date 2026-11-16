@@ -22,13 +22,16 @@ That gives you a module with its own service providers, a `PostRepositoryInterfa
 
 ## Requirements
 
-- PHP 8.1+
-- Laravel 10, 11, 12 or 13
+| Package | PHP | Laravel |
+| --- | --- | --- |
+| 1.x | 8.2 – 8.5 | 12, 13 |
+
+Laravel 10 and 11 are not supported. Both are past end of life, and Composer refuses to install them by default because of unpatched security advisories.
 
 ## Installation
 
 ```bash
-composer require silver-protoqol/laravel-repo-facade-builder --dev
+composer require silver-protoqol/laravel-repo-facade-builder:^1.0 --dev
 ```
 
 Package discovery registers the service provider for you.
@@ -60,7 +63,7 @@ php artisan make:repository User --model=User --bind --service
 | Option | Description |
 | --- | --- |
 | `--model=User` | Injects the model and generates `all`, `paginate`, `find`, `findOrFail`, `create`, `update` and `delete` on the class and its interface. A short name resolves to `App\Models\User`, or to `Modules\{Module}\Models\User` inside a module. A fully-qualified class name also works. |
-| `-b`, `--bind` | Adds `Interface::class => Repository::class` to the `$bindings` array of `RepositoryServiceProvider`. The provider is created if it is missing and registered in `bootstrap/providers.php` (Laravel 11+). |
+| `-b`, `--bind` | Adds `Interface::class => Repository::class` to the `$bindings` array of `RepositoryServiceProvider`. The provider is created if it is missing and registered in `bootstrap/providers.php`. |
 | `-s`, `--service` | Also creates `UserService`, which receives `UserRepositoryInterface` in its constructor. |
 
 `UserRepository` as input gives the same result as `User`, so the suffix is never doubled.
@@ -111,7 +114,7 @@ php artisan make:interface Payments/Gateway   # App\Interfaces\Payments\GatewayI
 php artisan make:trait Concerns/HasUuid       # App\Traits\Concerns\HasUuid
 ```
 
-> On Laravel 11+ these commands, along with `make:enum`, replace the framework's built-in versions of the same name, so the folder and naming rules stay the same across all your projects.
+> These commands, along with `make:enum`, replace the framework's built-in versions of the same name, so the folder and naming rules stay the same across all your projects.
 
 ### `make:module`
 
@@ -139,7 +142,7 @@ Modules/Blog/
     └── web.php
 ```
 
-`BlogServiceProvider` is registered in `bootstrap/providers.php` on Laravel 11+. Use `--no-register` to skip this. On Laravel 10, add it to `config/app.php` yourself.
+`BlogServiceProvider` is registered in `bootstrap/providers.php`. Use `--no-register` to skip this.
 
 If `composer.json` has no PSR-4 entry for the modules namespace, the command tells you what to add. Pass `--autoload` to have it added for you, then run `composer dump-autoload`.
 
@@ -199,12 +202,40 @@ After `vendor:publish --tag=repo-facade-builder-stubs`, edit any file in `stubs/
 
 Available placeholders include `{{ namespace }}`, `{{ class }}`, `{{ imports }}`, `{{ interface }}`, `{{ model }}`, `{{ repository }}` and `{{ accessor }}`. Module stubs also get `{{ module }}`, `{{ moduleKebab }}` and `{{ moduleSnake }}`.
 
-## Testing
+## Development
 
 ```bash
 composer install
-composer test
+composer test       # PHPUnit: unit and feature tests
+composer analyse    # PHPStan (Larastan), level 8
+composer lint       # Pint, check only
+composer format     # Pint, fix style
+composer check      # all of the above
 ```
+
+CI runs style and static analysis, then the test suite on PHP 8.2–8.5 with Laravel 12 and 13. Each combination runs with both the lowest and the latest allowed dependencies, plus one Windows job.
+
+## Versioning
+
+This package follows [Semantic Versioning](https://semver.org):
+
+- **Patch** (`1.0.x`): bug fixes. Generated output only changes to fix a bug.
+- **Minor** (`1.x.0`): new commands, options or stub placeholders, all backwards compatible.
+- **Major** (`x.0.0`): breaking changes, such as removed options, changed defaults, changes to generated code that would break custom stubs, or dropping a Laravel or PHP version.
+
+All changes are recorded in [CHANGELOG.md](CHANGELOG.md). `main` is aliased to `1.x-dev`.
+
+### Releasing
+
+1. Move the entries under `## [Unreleased]` in `CHANGELOG.md` into a new `## [X.Y.Z] - YYYY-MM-DD` section and update the compare links at the bottom.
+2. Commit, then tag and push:
+
+   ```bash
+   git tag -a vX.Y.Z -m "vX.Y.Z"
+   git push origin vX.Y.Z
+   ```
+
+3. The **Release** workflow runs the full test matrix, then publishes a GitHub release using that version's changelog section. It fails if the section is missing. Tags with a suffix such as `v1.1.0-beta.1` are published as pre-releases.
 
 ## Credits
 

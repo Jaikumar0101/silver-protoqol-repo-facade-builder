@@ -7,3 +7,4 @@ testbench.yaml
 .DS_Store
 .idea
 .vscode
+/build

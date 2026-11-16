@@ -166,8 +166,7 @@ class MakeRepositoryCommand extends GeneratorCommand
             return;
         }
 
-        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')
-            && ServiceProvider::addProviderToBootstrapFile($provider)) {
+        if (ServiceProvider::addProviderToBootstrapFile($provider)) {
             $this->components->info("Registered [{$provider}] in bootstrap/providers.php.");
 
             return;

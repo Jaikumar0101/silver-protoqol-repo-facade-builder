@@ -17,9 +17,7 @@ class BindingRegistrar
 
     public const NO_MARKER = 'no-marker';
 
-    public function __construct(protected Filesystem $files)
-    {
-    }
+    public function __construct(protected Filesystem $files) {}
 
     public function add(string $providerPath, string $abstract, string $concrete): string
     {
@@ -31,19 +29,17 @@ class BindingRegistrar
             return self::EXISTS;
         }
 
-        if (! preg_match('/^([ \t]*)'.preg_quote(self::MARKER, '/').'/m', $contents, $match)) {
+        if (! preg_match('/^([ \t]*)'.preg_quote(self::MARKER, '/').'/m', $contents, $match, PREG_OFFSET_CAPTURE)) {
             return self::NO_MARKER;
         }
 
-        $indent = $match[1];
-        $line = "{$indent}{$abstract}::class => {$concrete}::class,\n";
+        // Insert a new line, indented like the marker, directly above it.
+        $offset = $match[0][1];
+        $indent = $match[1][0];
 
-        $contents = preg_replace(
-            '/^'.preg_quote($match[0], '/').'/m',
-            addcslashes($line, '\\$').$match[0],
-            $contents,
-            1
-        );
+        $contents = substr($contents, 0, $offset)
+            ."{$indent}{$abstract}::class => {$concrete}::class,\n"
+            .substr($contents, $offset);
 
         $this->files->put($providerPath, $contents);
 

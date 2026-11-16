@@ -23,9 +23,16 @@ abstract class TestCase extends Orchestra
         'app/Providers/RepositoryServiceProvider.php',
         'Modules',
         'stubs/repo-facade-builder',
+        'config/repo-facade-builder.php',
+        'app/Contracts',
     ];
 
-    protected ?string $providersBackup = null;
+    /**
+     * Skeleton files that commands may edit, restored after every test.
+     *
+     * @var array<string, string>
+     */
+    protected array $backups = [];
 
     protected function setUp(): void
     {
@@ -33,16 +40,19 @@ abstract class TestCase extends Orchestra
 
         $this->clean();
 
-        $bootstrap = base_path('bootstrap/providers.php');
-        $this->providersBackup = is_file($bootstrap) ? file_get_contents($bootstrap) : null;
+        foreach (['bootstrap/providers.php', 'composer.json'] as $file) {
+            if (is_file(base_path($file))) {
+                $this->backups[$file] = file_get_contents(base_path($file));
+            }
+        }
     }
 
     protected function tearDown(): void
     {
         $this->clean();
 
-        if ($this->providersBackup !== null) {
-            file_put_contents(base_path('bootstrap/providers.php'), $this->providersBackup);
+        foreach ($this->backups as $file => $contents) {
+            file_put_contents(base_path($file), $contents);
         }
 
         parent::tearDown();
@@ -55,7 +65,7 @@ abstract class TestCase extends Orchestra
 
     protected function clean(): void
     {
-        $files = new Filesystem();
+        $files = new Filesystem;
 
         foreach ($this->generated as $path) {
             $path = base_path($path);
@@ -85,6 +95,6 @@ abstract class TestCase extends Orchestra
      */
     protected function makeModuleFolder(string $module, bool $appFolder = false): void
     {
-        (new Filesystem())->ensureDirectoryExists(base_path("Modules/{$module}".($appFolder ? '/app' : '')));
+        (new Filesystem)->ensureDirectoryExists(base_path("Modules/{$module}".($appFolder ? '/app' : '')));
     }
 }

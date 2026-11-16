@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Nwidart\Modules\LaravelModulesServiceProvider;
 use SilverProtoQoL\RepoFacadeBuilder\Support\BindingRegistrar;
 use SilverProtoQoL\RepoFacadeBuilder\Support\ModuleResolver;
 use SilverProtoQoL\RepoFacadeBuilder\Support\StubRenderer;
@@ -114,8 +115,7 @@ class MakeModuleCommand extends Command
             return;
         }
 
-        if (method_exists(ServiceProvider::class, 'addProviderToBootstrapFile')
-            && ServiceProvider::addProviderToBootstrapFile($provider)) {
+        if (ServiceProvider::addProviderToBootstrapFile($provider)) {
             $this->components->info("Registered [{$provider}] in bootstrap/providers.php.");
 
             return;
@@ -147,7 +147,7 @@ class MakeModuleCommand extends Command
         $path = str_replace('\\', '/', $this->relativePath($root)).'/';
         $psr4 = $composer['autoload']['psr-4'] ?? [];
 
-        if (array_key_exists($namespace, $psr4) || class_exists(\Nwidart\Modules\LaravelModulesServiceProvider::class)) {
+        if (array_key_exists($namespace, $psr4) || class_exists(LaravelModulesServiceProvider::class)) {
             return;
         }
 
